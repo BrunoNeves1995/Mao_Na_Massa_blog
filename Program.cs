@@ -1,6 +1,7 @@
 ﻿
 using System.Data.SqlClient;
 using Mao_Na_Massa_blog.Models;
+using Mao_Na_Massa_blog.Repositories;
 
 namespace Mao_Na_Massa_blog
 {
@@ -10,51 +11,28 @@ namespace Mao_Na_Massa_blog
             = @"Server=TERMINAL01\SQLEXPRESS;Database=Blog;User ID=admin;Password=12345;Trusted_Connection=false;TrustServerCertificate=true";
 
         static void Main(string[] args)
-        {
-            // ListarUsuarios();
+        {   
+            var connection = new SqlConnection(CONNECTION_STRING);
+            connection.Open();
+
+            ListarUsuarios(connection);
             // ListarUsuario();
             // CriarUsuario();
             // AtualizarUsuario();
-            ApagarUsuario();
+            // ApagarUsuario();
+
+            connection.Close();
         }
 
-        public static void ListarUsuarios()
+        public static void ListarUsuarios(SqlConnection connection)
         {
-            using (var connection = new SqlConnection(CONNECTION_STRING))
-            {
-                connection.Open();
-                using (var command = new SqlCommand())
-                {
-                    var sql =
-                    @"SELECT 
-                        [Id]
-                        ,[Name]
-                        ,[Email]
-                        ,[PasswordHash]
-                        ,[Bio]
-                        ,[Image]
-                        ,[Slug]
-                    FROM [Blog].[dbo].[User]";
+            UserRepository repositorio = new UserRepository(connection);
+            var  usuarios = repositorio.Buscar();
 
-                    command.Connection = connection;
-                    command.CommandText = sql;
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        var user = new User();
-                        user.Id = reader.GetInt32(0);
-                        user.Name = reader.GetString(1);
-                        user.Email = reader.GetString(2);
-                        user.PasswordHash = reader.GetString(3);
-                        user.Bio = reader.GetString(4);
-                        user.Image = reader.GetString(5);
-                        user.Slug = reader.GetString(6);
-
-                        Console.WriteLine($"Id: {user.Id}, Nome: {user.Name}");
-                    }
-                }
-            }
+            foreach (var usuario in usuarios)
+                Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}, E-mail: {usuario.Email}");
+                
+            
         }
 
         public static void ListarUsuario()
