@@ -10,15 +10,19 @@ namespace Mao_Na_Massa_blog
         const string CONNECTION_STRING
             = @"Server=TERMINAL01\SQLEXPRESS;Database=Blog;User ID=admin;Password=12345;Trusted_Connection=false;TrustServerCertificate=true";
 
+
+
+
         static void Main(string[] args)
-        {   
+        {
+            User usuario = new User("Fabio", "nevesfabio@gmail.com", "1234", "Fabio-dev", "https://...", "Fabio Neves");
             var connection = new SqlConnection(CONNECTION_STRING);
             connection.Open();
 
-            ListarUsuarios(connection);
-            // ListarUsuario();
-            // CriarUsuario();
-            // AtualizarUsuario();
+            // ListarUsuarios(connection);
+            ListarUsuario(connection, 1);
+            // CriarUsuario(usuario, connection);
+            // AtualizarUsuario(connection, usuario, 1);
             // ApagarUsuario();
 
             connection.Close();
@@ -27,160 +31,54 @@ namespace Mao_Na_Massa_blog
         public static void ListarUsuarios(SqlConnection connection)
         {
             UserRepository repositorio = new UserRepository(connection);
-            var  usuarios = repositorio.Buscar();
+            var usuarios = repositorio.Buscar();
 
-            foreach (var usuario in usuarios)
+            if (usuarios == null)
+            {
+                Console.WriteLine($"Não existe usuarios cadastrados");
+            }
+            else
+                foreach (var usuario in usuarios)
+                    Console.WriteLine($"Id: {usuario?.Id}, Nome: {usuario?.Name}, E-mail: {usuario?.Email}");
+        }
+
+        public static void ListarUsuario(SqlConnection connection, int id)
+        {
+            UserRepository repositorio = new UserRepository(connection);
+            var usuario = repositorio.Busca(id);
+
+            if (usuario.Id == 0 || usuario.Name == null)
+            {
+                Console.WriteLine($"Usuario nao encontrado");
+            }
+            else
                 Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}, E-mail: {usuario.Email}");
-                
-            
         }
 
-        public static void ListarUsuario()
+        public static void CriarUsuario(User usuario, SqlConnection connection)
         {
-            using (var connection = new SqlConnection(CONNECTION_STRING))
+            UserRepository repositorio = new UserRepository(connection);
+            var resultado = repositorio.Inserir(usuario);
+            if (resultado)
             {
-                connection.Open();
-                using (var command = new SqlCommand())
-                {
-
-                    var sql =
-                    @"SELECT 
-                        [Id]
-                        ,[Name]
-                        ,[Email]
-                        ,[PasswordHash]
-                        ,[Bio]
-                        ,[Image]
-                        ,[Slug]
-                    FROM [Blog].[dbo].[User]
-                    WHERE [Id] = @Id";
-
-                    command.Parameters.AddWithValue("@Id", 2);
-                    command.Connection = connection;
-                    command.CommandText = sql;
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        var user = new User();
-                        user.Id = reader.GetInt32(0);
-                        user.Name = reader.GetString(1);
-                        user.Email = reader.GetString(2);
-                        user.PasswordHash = reader.GetString(3);
-                        user.Bio = reader.GetString(4);
-                        user.Image = reader.GetString(5);
-                        user.Slug = reader.GetString(6);
-
-                        Console.WriteLine($"Id: {user.Id}, Nome: {user.Name}");
-                    }
-                }
+                Console.WriteLine($"Usuario criado com sucesso");
             }
+            else
+                Console.WriteLine($"Erro ao criar Usuario");
         }
 
-        public static void CriarUsuario()
+        public static void AtualizarUsuario(SqlConnection connection, User usuario, int id)
         {
-            using (var connection = new SqlConnection(CONNECTION_STRING))
+            UserRepository repositorio = new UserRepository(connection);
+            var result = repositorio.Atualizar(id, usuario);
+            if (result)
             {
-                connection.Open();
-                using (var command = new SqlCommand())
-                {
-                    var usuario = new User()
-                    {
-                        Name = "Bruno",
-                        Email = "nevesbruno@gmail.com",
-                        PasswordHash = "1234",
-                        Bio = "Bruno-dev",
-                        Image = "https://...",
-                        Slug = "bruno Neves"
-                    };
-
-                    var sql =
-                    @"
-                    INSERT INTO [Blog].[dbo].[User] 
-                        VALUES
-                        (
-                            @Name, 
-                            @Email, 
-                            @PasswordHash, 
-                            @Bio, 
-                            @Image, 
-                            @Slug
-                        )";
-
-                    command.Parameters.AddWithValue("@Name", usuario.Name);
-                    command.Parameters.AddWithValue("@Email", usuario.Email);
-                    command.Parameters.AddWithValue("@PasswordHash", usuario.PasswordHash);
-                    command.Parameters.AddWithValue("@Bio", usuario.Bio);
-                    command.Parameters.AddWithValue("@Image", usuario.Image);
-                    command.Parameters.AddWithValue("@Slug", usuario.Slug);
-                    command.Connection = connection;
-                    command.CommandText = sql;
-                    int result = command.ExecuteNonQuery();
-
-                    Console.WriteLine($"{result} registro afetados");
-                }
+                Console.WriteLine($"Usuarioatualizado com sucesso");
             }
+            else
+                Console.WriteLine($"Erro ao atualizar o Usuario");
         }
 
-        public static void AtualizarUsuario()
-        {   
-            var user = new User();
-            using (var connection = new SqlConnection(CONNECTION_STRING))
-            {
-                connection.Open();
-                using (var command = new SqlCommand())
-                {
-                    var selectSql =
-                    @"SELECT 
-                        [Id]
-                        ,[Name]
-                        ,[Email]
-                        ,[PasswordHash]
-                        ,[Bio]
-                        ,[Image]
-                        ,[Slug]
-                    FROM [Blog].[dbo].[User]
-                    WHERE [Id] = @Id";
-
-                    command.Parameters.AddWithValue("@Id", 2);
-                    command.Connection = connection;
-                    command.CommandText = selectSql;
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        user.Id = reader.GetInt32(0);
-                        user.Name = reader.GetString(1);
-                        user.Email = reader.GetString(2);
-                        user.PasswordHash = reader.GetString(3);
-                        user.Bio = reader.GetString(4);
-                        user.Image = reader.GetString(5);
-                        user.Slug = reader.GetString(6);
-
-                        Console.WriteLine($"Id: {user.Id}, Nome: {user.Name}");
-                    }
-                    reader.Close();
-                    user.Name = "Bruno";
-
-                    var insertSql =
-                    @"
-                     UPDATE [Blog].[dbo].[User] 
-                        SET Name = @Name
-                    WHERE Id = @Id";
-
-                    
-
-                    // command.Parameters.AddWithValue("@Id", user.Id);
-                    command.Parameters.AddWithValue("@Name", user.Name);
-
-                    command.Connection = connection;
-                    command.CommandText = insertSql;
-                    int result = command.ExecuteNonQuery();
-
-                    Console.WriteLine($"{result} registro afetados");
-                }
-            }
-        }
 
         public static void ApagarUsuario()
         {
@@ -199,10 +97,10 @@ namespace Mao_Na_Massa_blog
                     command.Parameters.AddWithValue("@Id", user.Id);
                     command.Connection = connection;
                     command.CommandText = sql;
-                    
+
                     int linha = command.ExecuteNonQuery();
                     Console.WriteLine($"{linha} afetadas");
-                    
+
                 }
             }
         }
