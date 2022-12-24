@@ -55,9 +55,10 @@ namespace Mao_Na_Massa_blog.Repositories
                 }
 
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"E500 - Erro interno no servidor, Mensagem: {ex.Message}");
+
             }
             return users;
         }
@@ -102,10 +103,11 @@ namespace Mao_Na_Massa_blog.Repositories
                     }
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
 
                 Console.WriteLine($"E501 - Erro interno no servidor, Mensagem: {ex.Message}");
+
             }
             return user;
         }
@@ -145,10 +147,11 @@ namespace Mao_Na_Massa_blog.Repositories
                     }
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
 
                 Console.WriteLine($"E502 - Erro interno no servidor, Mensagem: {ex.Message}");
+                return false;
             }
 
             return true;
@@ -160,9 +163,10 @@ namespace Mao_Na_Massa_blog.Repositories
             {
                 using (_connection)
                 {
-                    var user = new User();
+
                     using (var command = new SqlCommand())
                     {
+                        // recuperando o usuario
                         var selectSql =
                         @"SELECT 
 	                        [Id]
@@ -182,21 +186,20 @@ namespace Mao_Na_Massa_blog.Repositories
 
                         while (reader.Read())
                         {
+                            var antigoUsuario = new User();
+                            antigoUsuario.Id = reader.GetInt32(0);
+                            antigoUsuario.Name = reader.GetString(1);
+                            antigoUsuario.Email = reader.GetString(2);
+                            antigoUsuario.PasswordHash = reader.GetString(3);
+                            antigoUsuario.Bio = reader.GetString(4);
+                            antigoUsuario.Image = reader.GetString(5);
+                            antigoUsuario.Slug = reader.GetString(6);
 
-                            user.Id = reader.GetInt32(0);
-                            user.Name = reader.GetString(1);
-                            user.Email = reader.GetString(2);
-                            user.PasswordHash = reader.GetString(3);
-                            user.Bio = reader.GetString(4);
-                            user.Image = reader.GetString(5);
-                            user.Slug = reader.GetString(6);
-
-                            Console.WriteLine($"Id: {user.Id}, Nome: {user.Name}");
+                            Console.WriteLine($"Id: {antigoUsuario.Id}, Nome: {antigoUsuario.Name}");
                         }
                         reader.Close();
 
-                        user.Name = usuario.Name;
-
+                        // atualizando o dados do usuario
                         var insertSql =
                         @"
 	                     UPDATE [Blog].[dbo].[User] 
@@ -204,20 +207,88 @@ namespace Mao_Na_Massa_blog.Repositories
 	                    WHERE Id = @Id";
 
                         // command.Parameters.AddWithValue("@Id", user.Id);
-                        command.Parameters.AddWithValue("@Name", user.Name);
+                        command.Parameters.AddWithValue("@Name", usuario.Name);
 
                         command.Connection = _connection;
                         command.CommandText = insertSql;
-                        int result = command.ExecuteNonQuery();
-
-                        Console.WriteLine($"{result} registros afetados");
+                        command.ExecuteNonQuery();
                     }
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
+            {
+                Console.WriteLine($"E502 - Erro interno no servidor, Mensagem: {ex.Message}");
+                return false;
+            }
+            return true;
+        }
+
+        public bool Deletar(int id)
+        {
+            try
+            {
+                var usuario = new User();
+                using (_connection)
+                {
+                    using (var command = new SqlCommand())
+                    {
+                        // recuperando o usuario
+                        var selectSql =
+                        @"SELECT 
+		                        [Id]
+		                        ,[Name]
+		                        ,[Email]
+		                        ,[PasswordHash]
+		                        ,[Bio]
+		                        ,[Image]
+		                        ,[Slug]
+		                    FROM [Blog].[dbo].[User]
+		                    WHERE [Id] = @Id";
+
+                        command.Parameters.AddWithValue("@Id", id);
+                        command.Connection = _connection;
+                        command.CommandText = selectSql;
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+
+                            usuario.Id = reader.GetInt32(0);
+                            usuario.Name = reader.GetString(1);
+                            usuario.Email = reader.GetString(2);
+                            usuario.PasswordHash = reader.GetString(3);
+                            usuario.Bio = reader.GetString(4);
+                            usuario.Image = reader.GetString(5);
+                            usuario.Slug = reader.GetString(6);
+
+                            Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}");
+                        }
+                        reader.Close();
+
+                        if (usuario.Id == 0  || usuario.Name == null)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            // deletando usuario
+                            var sql =
+                            @"DELETE FROM [Blog].[dbo].[User]
+	                    WHERE [Id] = @IdUsuario";
+
+                            command.Parameters.AddWithValue("@IdUsuario", id);
+                            command.Connection = _connection;
+                            command.CommandText = sql;
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
             {
 
                 Console.WriteLine($"E502 - Erro interno no servidor, Mensagem: {ex.Message}");
+                return false;
             }
             return true;
         }

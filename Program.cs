@@ -15,31 +15,41 @@ namespace Mao_Na_Massa_blog
 
         static void Main(string[] args)
         {
-            User usuario = new User("Fabio", "nevesfabio@gmail.com", "1234", "Fabio-dev", "https://...", "Fabio Neves");
+            User usuario = new User("vinicius", "nevesvinicius@gmail.com", "1234", "vinicius-dev", "https://...", "vinicius Neves");
             var connection = new SqlConnection(CONNECTION_STRING);
+
+
             connection.Open();
 
             // ListarUsuarios(connection);
-            ListarUsuario(connection, 1);
+            // ListarUsuario(connection, 1);
             // CriarUsuario(usuario, connection);
             // AtualizarUsuario(connection, usuario, 1);
-            // ApagarUsuario();
+            //ApagarUsuario(connection, 1);
 
             connection.Close();
         }
 
         public static void ListarUsuarios(SqlConnection connection)
         {
-            UserRepository repositorio = new UserRepository(connection);
-            var usuarios = repositorio.Buscar();
-
-            if (usuarios == null)
+            try
             {
-                Console.WriteLine($"Não existe usuarios cadastrados");
+                UserRepository repositorio = new UserRepository(connection);
+                var usuarios = repositorio.Buscar();
+
+                if (usuarios == null)
+                {
+                    Console.WriteLine($"Não existe usuarios cadastrados");
+                }
+                else
+                    foreach (var usuario in usuarios)
+                        Console.WriteLine($"Id: {usuario?.Id}, Nome: {usuario?.Name}, E-mail: {usuario?.Email}");
             }
-            else
-                foreach (var usuario in usuarios)
-                    Console.WriteLine($"Id: {usuario?.Id}, Nome: {usuario?.Name}, E-mail: {usuario?.Email}");
+            catch(System.Exception ex)
+            {
+
+                Console.WriteLine($"E5003 - Erro interno no servidor, Mensagem: {ex.Message}");
+            }
         }
 
         public static void ListarUsuario(SqlConnection connection, int id)
@@ -47,61 +57,83 @@ namespace Mao_Na_Massa_blog
             UserRepository repositorio = new UserRepository(connection);
             var usuario = repositorio.Busca(id);
 
-            if (usuario.Id == 0 || usuario.Name == null)
+            try
             {
-                Console.WriteLine($"Usuario nao encontrado");
+                if (usuario == null)
+                {
+                    Console.WriteLine($"Usuario nao encontrado");
+                }
+                else
+                    Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}, E-mail: {usuario.Email}");
             }
-            else
-                Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}, E-mail: {usuario.Email}");
+            catch(System.Exception ex)
+            {
+
+                Console.WriteLine($"E5003 - Erro interno no servidor, Mensagem: {ex.Message}");
+            }
         }
 
         public static void CriarUsuario(User usuario, SqlConnection connection)
         {
-            UserRepository repositorio = new UserRepository(connection);
-            var resultado = repositorio.Inserir(usuario);
-            if (resultado)
+            try
             {
-                Console.WriteLine($"Usuario criado com sucesso");
+                UserRepository repositorio = new UserRepository(connection);
+                var resultado = repositorio.Inserir(usuario);
+                if (resultado)
+                {
+                    Console.WriteLine($"Usuario criado com sucesso");
+                }
+                else
+                    Console.WriteLine($"Erro ao criar Usuario");
             }
-            else
-                Console.WriteLine($"Erro ao criar Usuario");
+            catch(System.Exception ex)
+            {
+
+                Console.WriteLine($"E5003 - Erro interno no servidor, Mensagem: {ex.Message}");
+            }
         }
 
         public static void AtualizarUsuario(SqlConnection connection, User usuario, int id)
         {
-            UserRepository repositorio = new UserRepository(connection);
-            var result = repositorio.Atualizar(id, usuario);
-            if (result)
+
+            try
             {
-                Console.WriteLine($"Usuarioatualizado com sucesso");
+                UserRepository repositorio = new UserRepository(connection);
+                var result = repositorio.Atualizar(id, usuario);
+
+                if (result)
+                {
+                    Console.WriteLine($"Usuario {usuario.Name} atualizado com sucesso");
+                }
+                else
+                    Console.WriteLine($"Erro ao atualizar o Usuario");
             }
-            else
-                Console.WriteLine($"Erro ao atualizar o Usuario");
+            catch(System.Exception ex)
+            {
+
+                Console.WriteLine($"E5003 - Erro interno no servidor, Mensagem: {ex.Message}");
+            }
         }
 
 
-        public static void ApagarUsuario()
+        public static void ApagarUsuario(SqlConnection connection, int id)
         {
-            using (var connection = new SqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                var user = new User();
-                user.Id = 2;
-                using (var command = new SqlCommand())
+                UserRepository repositorio = new UserRepository(connection);
+                var resultado = repositorio.Deletar(id);
+
+                if (resultado)
                 {
-
-                    var sql =
-                    @"DELETE FROM [Blog].[dbo].[User]
-                    WHERE [Id] = @Id";
-
-                    command.Parameters.AddWithValue("@Id", user.Id);
-                    command.Connection = connection;
-                    command.CommandText = sql;
-
-                    int linha = command.ExecuteNonQuery();
-                    Console.WriteLine($"{linha} afetadas");
-
+                    Console.WriteLine($"Usuario com {id} foi deletado com sucesso");
                 }
+                else
+                    Console.WriteLine($"Erro ao excluir usuario");
+            }
+            catch(System.Exception ex)
+            {
+
+                Console.WriteLine($"E5003 - Erro interno no servidor, Mensagem: {ex.Message}");
             }
         }
     }
