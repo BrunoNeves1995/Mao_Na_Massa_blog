@@ -217,7 +217,7 @@ namespace Mao_Na_Massa_blog.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"E502 - Erro interno no servidor, Mensagem: {ex.Message}");
+                Console.WriteLine($"E503 - Erro interno no servidor, Mensagem: {ex.Message}");
                 return false;
             }
             return true;
@@ -287,7 +287,7 @@ namespace Mao_Na_Massa_blog.Repositories
             catch (Exception ex)
             {
 
-                Console.WriteLine($"E502 - Erro interno no servidor, Mensagem: {ex.Message}");
+                Console.WriteLine($"E504 - Erro interno no servidor, Mensagem: {ex.Message}");
                 return false;
             }
             return true;
