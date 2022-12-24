@@ -16,24 +16,24 @@ namespace Mao_Na_Massa_blog
         static void Main(string[] args)
         {
             User usuario = new("vinicius", "nevesvinicius@gmail.com", "1234", "vinicius-dev", "https://...", "vinicius Neves");
-            Role cargo = new(name: "Programado C#", slug: "Programado-C#");
-            
+            Role autor = new(name: "Bruno Neves", slug: "Autor");
+
             var connection = new SqlConnection(CONNECTION_STRING);
 
 
             connection.Open();
 
-            // ListarUsuarios(connection);
-            // ListarUsuario(connection, 1);
+            //ListarUsuarios(connection);
+            //ListarUsuario(connection, 4);
             // CriarUsuario(usuario, connection);
-            // AtualizarUsuario(connection, usuario, 1);
+            AtualizarUsuario(connection, usuario, 1);
             //ApagarUsuario(connection, 1);
 
-            //ListarCargos(connection);
-            //ListarCargo(connection, 1);
-            //CriarCargo(connection, cargo);
-            //AtualizarCargo(connection, cargo, 1);
-            ApagarCargo(connection, 1);
+            //ListarAutores(connection);
+            //ListarAutor(connection, 2);
+            //CriarAutor(connection, autor);
+            AtualizarAutor(connection, autor, 1);
+            //ApagarAutor(connection, 1);
 
             connection.Close();
         }
@@ -54,7 +54,7 @@ namespace Mao_Na_Massa_blog
                     foreach (var usuario in usuarios)
                         Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}, E-mail: {usuario.Email}");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
                 Console.WriteLine($"OCorreu um erro interno no servidor ao buscar os usuarios, Mensagem: {ex.Message}");
@@ -75,7 +75,7 @@ namespace Mao_Na_Massa_blog
                 else
                     Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}, E-mail: {usuario.Email}");
             }
-            catch(System.Exception ex)
+            catch (System.Exception ex)
             {
 
                 Console.WriteLine($"Erro interno no servidor, Mensagem: {ex.Message}");
@@ -95,7 +95,7 @@ namespace Mao_Na_Massa_blog
                 else
                     Console.WriteLine($"Erro ao criar Usuario");
             }
-            catch(System.Exception ex)
+            catch (System.Exception ex)
             {
 
                 Console.WriteLine($"Ocorreu um erro interno no servidor ao criar um novo usuario, Mensagem: {ex.Message}");
@@ -117,7 +117,7 @@ namespace Mao_Na_Massa_blog
                 else
                     Console.WriteLine($"Erro ao atualizar o usuario");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
                 Console.WriteLine($"Ocorreu um erro interno no servidor ao atualizar o usuario, Mensagem: {ex.Message}");
@@ -133,96 +133,96 @@ namespace Mao_Na_Massa_blog
                 var resultado = repositorio.Deletar(id);
 
                 if (resultado)
-                    Console.WriteLine($"Usuario com {id} foi deletado com sucesso");        
+                    Console.WriteLine($"Usuario com {id} foi deletado com sucesso");
                 else
                     Console.WriteLine($"Erro ao excluir usuario");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
                 Console.WriteLine($"Ocorreu um erro interno no servidor ao excluir o usuario, Mensagem: {ex.Message}");
             }
         }
-    
+
         // ROLE
-        public static void ListarCargos(SqlConnection connection)
+        public static void ListarAutores(SqlConnection connection)
         {
             try
             {
-                RoleRepository repositorio = new (connection);
-                var cargos = repositorio.Buscar();
+                RoleRepository repositorio = new(connection);
+                var autores = repositorio.Buscar();
 
-                if (cargos.Count() == 0)
+                if (autores.Count() == 0)
                 {
-                    Console.WriteLine($"Cargos não cadastrado");
+                    Console.WriteLine($"Autor não cadastrado");
                 }
                 else
-                    foreach (var cargo in cargos)
-                        Console.WriteLine($"Id: {cargo.Id}, Nome: {cargo.Name}, Slug: {cargo.Slug}");
+                    foreach (var autor in autores)
+                        Console.WriteLine($"Id: {autor.Id}, Nome: {autor.Name}, Slug: {autor.Slug}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"OCorreu um erro interno no servidor ao buscar os cargos, Mensagem: {ex.Message}");
+                Console.WriteLine($"OCorreu um erro interno no servidor ao buscar os autores, Mensagem: {ex.Message}");
             }
         }
 
-        public static void ListarCargo(SqlConnection connection, int id)
+        public static void ListarAutor(SqlConnection connection, int id)
         {
             try
             {
                 RoleRepository repositorio = new(connection);
-                Role cargo = repositorio.Busca(id);
+                Role autor = repositorio.Busca(id);
 
-                if(cargo.Id == 0 || cargo.Name == null)
-                    Console.WriteLine($"Cargo nao encontrado");
+                if (autor.Id == 0 || autor.Name == null)
+                    Console.WriteLine($"Autor nao encontrado");
                 else
-                    Console.WriteLine($"Id: {cargo.Id}, Nome: {cargo.Name}, Slug: {cargo.Slug}");
+                    Console.WriteLine($"Id: {autor.Id}, Nome: {autor.Name}, Slug: {autor.Slug}");
             }
             catch (Exception ex)
             {
 
-                Console.WriteLine($"OCorreu um erro interno no servidor ao busca o cargo, Mensagem: {ex.Message}");
+                Console.WriteLine($"OCorreu um erro interno no servidor ao busca o autor, Mensagem: {ex.Message}");
             }
         }
 
-        public static void CriarCargo(SqlConnection connection, Role cargo)
+        public static void CriarAutor(SqlConnection connection, Role autor)
         {
             try
             {
                 RoleRepository repositorio = new(connection);
-                bool resultado = repositorio.Inserir(cargo);
+                bool resultado = repositorio.Inserir(autor);
 
                 if (resultado)
-                    Console.WriteLine($"Cargo criado com sucesso");    
+                    Console.WriteLine($"Autor criado com sucesso");
                 else
-                    Console.WriteLine($"Erro ao criar Usuario");
+                    Console.WriteLine($"Erro ao criar autor");
             }
             catch (Exception ex)
             {
 
-                Console.WriteLine($"Ocorreu um erro interno no servidor ao criar um novo cargo, Mensagem: {ex.Message}");
+                Console.WriteLine($"Ocorreu um erro interno no servidor ao criar um novo autor, Mensagem: {ex.Message}");
             }
         }
 
-        public static void AtualizarCargo(SqlConnection connection, Role cargo, int id)
+        public static void AtualizarAutor(SqlConnection connection, Role autor, int id)
         {
             try
             {
                 RoleRepository repositorio = new(connection);
-                bool resultado = repositorio.Atualizar(cargo, id);
+                bool resultado = repositorio.Atualizar(autor, id);
 
-                if(resultado)
-                    Console.WriteLine($"Cargo {cargo.Name} foi atualizado com sucesso");
+                if (resultado)
+                    Console.WriteLine($"Autor {autor.Name} foi atualizado com sucesso");
                 else
-                    Console.WriteLine($"Erro ao atualizar o cargo");
+                    Console.WriteLine($"Erro ao atualizar o autor");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro interno no servidor ao atualizar o cargo, Mensagem: {ex.Message}");
+                Console.WriteLine($"Ocorreu um erro interno no servidor ao atualizar o autor, Mensagem: {ex.Message}");
             }
         }
 
-        public static void ApagarCargo(SqlConnection connection, int id)
+        public static void ApagarAutor(SqlConnection connection, int id)
         {
             try
             {
@@ -230,13 +230,13 @@ namespace Mao_Na_Massa_blog
                 bool resutado = repositorio.Deletar(id);
 
                 if (resutado)
-                    Console.WriteLine($"Cargo com {id} foi deletado com sucesso");
+                    Console.WriteLine($"Autor com {id} foi deletado com sucesso");
                 else
-                    Console.WriteLine($"Erro ao excluir o cargo");
+                    Console.WriteLine($"Erro ao excluir o autor");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro interno no servidor ao excluir o cargo, Mensagem: {ex.Message}");
+                Console.WriteLine($"Ocorreu um erro interno no servidor ao excluir o autor, Mensagem: {ex.Message}");
             }
         }
     }

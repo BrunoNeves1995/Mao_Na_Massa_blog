@@ -15,138 +15,117 @@ namespace Mao_Na_Massa_blog.Repositories
 
         public RoleRepository(SqlConnection connection)
         {
-            _connection= connection;
+            _connection = connection;
         }
 
         public IEnumerable<Role> Buscar()
         {
-            List<Role> roles = new();
+            List<Role> autores = new();
             try
             {
-                using (_connection)
+                SqlCommand command = new();
+
+                var sql = @"
+                SELECT 
+                    [Id]
+                    ,[Name]
+                    ,[Slug]
+                FROM [Blog].[dbo].[Role]
+                ";
+
+                command.CommandText = sql;
+                command.Connection = _connection;
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    using (var command = new SqlCommand())
-                    {
-                        var sql = @"
-                         SELECT 
-                             [Id]
-                            ,[Name]
-                            ,[Slug]
-                         FROM [Blog].[dbo].[Role]";
-
-                        
-                        command.CommandText = sql;
-                        command.Connection = _connection;
-                        SqlDataReader reader = command.ExecuteReader();
-
-                        while (reader.Read())
-                        {
-                            Role role = new();
-                            role.Id = Convert.ToInt32(reader["Id"]);
-                            role.Name= Convert.ToString(reader["Name"]);
-                            role.Slug = Convert.ToString(reader["Slug"]);
-                            roles.Add(role);
-
-                        }
-                    }
+                    Role autor = new();
+                    autor.Id = Convert.ToInt32(reader["Id"]);
+                    autor.Name = Convert.ToString(reader["Name"]);
+                    autor.Slug = Convert.ToString(reader["Slug"]);
+                    autores.Add(autor);
                 }
+                reader.Close();
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"E505 - Erro interno no servidor, Mensagem: {ex.Message}");
             }
-            return roles;
+            return autores;
         }
 
         public Role Busca(int id)
         {
-            Role role = new();
+            Role autor = new();
             try
             {
-                using (_connection)
+                var command = new SqlCommand();
+                var sql = @"
+                SELECT 
+                    [Id]
+                    ,[Name]
+                    ,[Slug]
+                FROM [Blog].[dbo].[Role]
+		        WHERE [Id] = @Id";
+
+                command.CommandText = sql;
+                command.Connection = _connection;
+
+                command.Parameters.AddWithValue("@Id", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    using (var command = new SqlCommand())
-                    {
-                        var sql =@"
-                         SELECT 
-                             [Id]
-                            ,[Name]
-                            ,[Slug]
-                         FROM [Blog].[dbo].[Role]
-		                 WHERE [Id] = @Id";
-
-                        command.Parameters.AddWithValue("@Id", id);
-                        command.Connection = _connection;
-                        command.CommandText = sql;
-                        SqlDataReader reader = command.ExecuteReader();
-
-                        while (reader.Read())
-                        {
-                            role.Id = Convert.ToInt32(reader["Id"]);
-                            role.Name = Convert.ToString(reader["Name"]);
-                            role.Slug = Convert.ToString(reader["Slug"]);
-                        }
-                    }
+                    autor.Id = Convert.ToInt32(reader["Id"]);
+                    autor.Name = Convert.ToString(reader["Name"]);
+                    autor.Slug = Convert.ToString(reader["Slug"]);
                 }
+                reader.Close();
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"E506 - Erro interno no servidor, Mensagem: {ex.Message}");
-
             }
-            return role;
+            return autor;
         }
 
-        public bool Inserir(Role cargo)
+
+        public bool Inserir(Role autor)
         {
             try
             {
-                using (_connection)
-                {
-                    using (var command = new SqlCommand())
-                    {
-                        var sql =
-                        @"
-                        INSERT INTO [Blog].[dbo].[Role] 
-                            VALUES
-                        (
-                            @Name, 
-                            @Slug
-                        )";
+                var command = new SqlCommand();
+                var sql = @"
+                INSERT INTO [Blog].[dbo].[Role] 
+                VALUES
+                (
+                    @Name, 
+                    @Slug
+                )";
 
-                        command.Parameters.AddWithValue("@Name", cargo.Name);
-                        command.Parameters.AddWithValue("@Slug", cargo.Slug);
+                command.CommandText = sql;
+                command.Connection = _connection;
 
-                        command.Connection = _connection;
-                        command.CommandText = sql;
-                        command.ExecuteNonQuery();
-                        // int result = command.ExecuteNonQuery();
-                        // Console.WriteLine($"{result} registro afetados");
-                    }
-                }
+                command.Parameters.AddWithValue("@Name", autor.Name);
+                command.Parameters.AddWithValue("@Slug", autor.Slug);
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"E507 - Erro interno no servidor, Mensagem: {ex.Message}");
                 return false;
             }
-
             return true;
         }
 
-        public bool Atualizar(Role cargo, int id)
+
+        public bool Atualizar(Role autor, int id)
         {
             try
             {
-                using (_connection)
-                {
-                    using (SqlCommand command = new())
-                    {
-                        // recuperando o cargo
-                        var sql = @"
+                SqlCommand command = new();
+                // recuperando o autor
+                var sql = @"
                          SELECT 
                              [Id]
                             ,[Name]
@@ -154,37 +133,37 @@ namespace Mao_Na_Massa_blog.Repositories
                          FROM [Blog].[dbo].[Role]
 		                 WHERE [Id] = @Id";
 
-                        command.CommandText = sql;
-                        command.Connection = _connection;
-                        command.Parameters.AddWithValue("@Id", id);
-                        SqlDataReader reader = command.ExecuteReader();
+                command.CommandText = sql;
+                command.Connection = _connection;
+                command.Parameters.AddWithValue("@Id", id);
+                SqlDataReader reader = command.ExecuteReader();
 
-                        while (reader.Read())
-                        {
-                            Role antigoCargo = new();
-                            antigoCargo.Id = Convert.ToInt32(reader["Id"]);
-                            antigoCargo.Name = Convert.ToString(reader["Name"]);
-                            antigoCargo.Slug = Convert.ToString(reader["Slug"]);
+                while (reader.Read())
+                {
+                    Role antigoAutor = new();
+                    antigoAutor.Id = Convert.ToInt32(reader["Id"]);
+                    antigoAutor.Name = Convert.ToString(reader["Name"]);
+                    antigoAutor.Slug = Convert.ToString(reader["Slug"]);
 
-                            Console.WriteLine($"Id: {antigoCargo.Id}, Nome: {antigoCargo.Name}");
-                        }
-                        reader.Close();
-
-                        // atualizando o dados do caro
-                        var insertSql =
-                        @"
-	                     UPDATE [Blog].[dbo].[Role] 
-	                        SET Name = @Name
-	                    WHERE Id = @Id";
-
-                        // command.Parameters.AddWithValue("@Id", cargo.Id);
-                        command.Parameters.AddWithValue("@Name", cargo.Name);
-
-                        command.CommandText = insertSql;
-                        command.Connection = _connection;
-                        command.ExecuteNonQuery();
-                    }
+                    Console.WriteLine($"Id: {antigoAutor.Id}, Nome: {antigoAutor.Name}");
                 }
+                reader.Close();
+
+                // atualizando o dados do autor
+                var insertSql =
+                @"
+	            UPDATE [Blog].[dbo].[Role] 
+	                SET Name = @Name
+	            WHERE Id = @Id";
+
+                // command.Parameters.AddWithValue("@Id", cargo.Id);
+                command.Parameters.AddWithValue("@Name", autor.Name);
+
+                command.CommandText = insertSql;
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+
+
             }
             catch (Exception ex)
             {
@@ -198,58 +177,54 @@ namespace Mao_Na_Massa_blog.Repositories
         {
             try
             {
-                Role cargo = new();
-                using (_connection)
+                Role autor = new();
+
+
+                SqlCommand command = new();
+
+                // recuperando o cargo
+                var sql = @"
+                SELECT 
+                    [Id]
+                    ,[Name]
+                    ,[Slug]
+                FROM [Blog].[dbo].[Role]
+		        WHERE [Id] = @Id";
+
+                command.CommandText = sql;
+                command.Connection = _connection;
+                command.Parameters.AddWithValue("@Id", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    using (SqlCommand command = new())
-                    {
-                        // recuperando o cargo
-                        var sql = @"
-                         SELECT 
-                             [Id]
-                            ,[Name]
-                            ,[Slug]
-                         FROM [Blog].[dbo].[Role]
-		                 WHERE [Id] = @Id";
+                    autor.Id = Convert.ToInt32(reader["Id"]);
+                    autor.Name = Convert.ToString(reader["Name"]);
+                    autor.Slug = Convert.ToString(reader["Slug"]);
 
-                        command.CommandText = sql;
-                        command.Connection = _connection;
-                        command.Parameters.AddWithValue("@Id", id);
-                        SqlDataReader reader = command.ExecuteReader();
+                    Console.WriteLine($"Id: {autor.Id}, Nome: {autor.Name}");
+                }
+                reader.Close();
 
-                        while (reader.Read())
-                        {
-
-                            cargo.Id = Convert.ToInt32(reader["Id"]);
-                            cargo.Name = Convert.ToString(reader["Name"]);
-                            cargo.Slug = Convert.ToString(reader["Slug"]);
-
-                            Console.WriteLine($"Id: {cargo.Id}, Nome: {cargo.Name}");
-                        }
-                        reader.Close();
-
-                        if (cargo.Id == 0 || cargo.Name == null)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            // deletando cargo
-                            var deleteSql =
-                            @"DELETE FROM [Blog].[dbo].[Role]
+                if (autor.Id == 0 || autor.Name == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    // deletando cargo
+                    var deleteSql =
+                    @"DELETE FROM [Blog].[dbo].[Role]
 	                        WHERE [Id] = @IdUsuario";
 
-                            command.Parameters.AddWithValue("@IdUsuario", id);
-                            command.Connection = _connection;
-                            command.CommandText = deleteSql;
-                            command.ExecuteNonQuery();
-                        }
-                    }
+                    command.Parameters.AddWithValue("@IdUsuario", id);
+                    command.Connection = _connection;
+                    command.CommandText = deleteSql;
+                    command.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"E509 - Erro interno no servidor, Mensagem: {ex.Message}");
                 return false;
             }
