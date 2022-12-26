@@ -20,10 +20,7 @@ namespace Mao_Na_Massa_blog.Repositories
             List<User> users = new List<User>();
             try
             {
-
                 var command = new SqlCommand();
-
-
                 var sql =
                 @"SELECT 
 	                [Id]
@@ -55,7 +52,6 @@ namespace Mao_Na_Massa_blog.Repositories
             catch (Exception ex)
             {
                 Console.WriteLine($"E500 - Erro interno no servidor, Mensagem: {ex.Message}");
-
             }
             return users;
         }
@@ -264,6 +260,8 @@ namespace Mao_Na_Massa_blog.Repositories
             }
             return true;
         }
+
+
     }
 
 }

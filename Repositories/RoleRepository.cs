@@ -122,7 +122,8 @@ namespace Mao_Na_Massa_blog.Repositories
         public bool Atualizar(Role autor, int id)
         {
             try
-            {
+            {   
+                Role antigoAutor = new Role();
                 SqlCommand command = new();
                 // recuperando o autor
                 var sql = @"
@@ -140,29 +141,33 @@ namespace Mao_Na_Massa_blog.Repositories
 
                 while (reader.Read())
                 {
-                    Role antigoAutor = new();
+                   
                     antigoAutor.Id = Convert.ToInt32(reader["Id"]);
                     antigoAutor.Name = Convert.ToString(reader["Name"]);
                     antigoAutor.Slug = Convert.ToString(reader["Slug"]);
-
                     Console.WriteLine($"Id: {antigoAutor.Id}, Nome: {antigoAutor.Name}");
                 }
                 reader.Close();
 
                 // atualizando o dados do autor
-                var insertSql =
-                @"
-	            UPDATE [Blog].[dbo].[Role] 
-	                SET Name = @Name
-	            WHERE Id = @Id";
+                if (antigoAutor.Id == 0 || antigoAutor.Name == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    var insertSql = @"
+	                UPDATE [Blog].[dbo].[Role] 
+	                    SET Name = @Name
+	                WHERE Id = @IdAutor";
 
-                // command.Parameters.AddWithValue("@Id", cargo.Id);
-                command.Parameters.AddWithValue("@Name", autor.Name);
+                    command.Parameters.AddWithValue("@IdAutor", id);
+                    command.Parameters.AddWithValue("@Name", autor.Name);
 
-                command.CommandText = insertSql;
-                command.Connection = _connection;
-                command.ExecuteNonQuery();
-
+                    command.CommandText = insertSql;
+                    command.Connection = _connection;
+                    command.ExecuteNonQuery();
+                }
 
             }
             catch (Exception ex)

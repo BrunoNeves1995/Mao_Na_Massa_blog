@@ -15,8 +15,8 @@ namespace Mao_Na_Massa_blog
 
         static void Main(string[] args)
         {
-            User usuario = new("vinicius", "nevesvinicius@gmail.com", "1234", "vinicius-dev", "https://...", "vinicius Neves");
-            Role autor = new(name: "Bruno Neves", slug: "Autor");
+            User usuario = new("carol", "nevescarol@gmail.com", "1234", "carol-dev", "https://...", "carol Neves");
+            Role autor = new(name: "Autor", slug: "Autor");
 
             var connection = new SqlConnection(CONNECTION_STRING);
 
@@ -32,7 +32,7 @@ namespace Mao_Na_Massa_blog
             //ListarAutores(connection);
             //ListarAutor(connection, 2);
             //CriarAutor(connection, autor);
-            AtualizarAutor(connection, autor, 1);
+            AtualizarAutor(connection, autor, 2);
             //ApagarAutor(connection, 1);
 
             connection.Close();
@@ -212,9 +212,9 @@ namespace Mao_Na_Massa_blog
                 bool resultado = repositorio.Atualizar(autor, id);
 
                 if (resultado)
-                    Console.WriteLine($"Autor {autor.Name} foi atualizado com sucesso");
+                    Console.WriteLine($"{autor.Name} foi atualizado com sucesso");
                 else
-                    Console.WriteLine($"Erro ao atualizar o autor");
+                    Console.WriteLine($"Usuario não encontrado");
             }
             catch (Exception ex)
             {

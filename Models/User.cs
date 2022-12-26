@@ -17,6 +17,7 @@ namespace Mao_Na_Massa_blog.Models
             Bio = bio;
             Image = image;
             Slug = slug;
+            Roles = new List<Role>();
         }
 
         public int Id { get;  set; }
@@ -28,5 +29,8 @@ namespace Mao_Na_Massa_blog.Models
         public string? Slug { get; set; }
 
 
+        // relarionamento N para N -> cada usuario pode ter varios autor
+        // Esse relacionamento fica apenas em umas das classe que faz mais sentido
+        public IEnumerable<Role>? Roles { get; set; }
     }
 }
