@@ -5,7 +5,7 @@ namespace Mao_Na_Massa_blog.Models
     {   
         public User()
         {
-            
+            Roles = new List<Role>();
         }
 
         public User(string name, string email, string passwordHash, string bio, string image, string slug)
@@ -31,6 +31,6 @@ namespace Mao_Na_Massa_blog.Models
 
         // relarionamento N para N -> cada usuario pode ter varios autor
         // Esse relacionamento fica apenas em umas das classe que faz mais sentido
-        public IEnumerable<Role>? Roles { get; set; }
+        public IList<Role> Roles { get; set; }
     }
 }
