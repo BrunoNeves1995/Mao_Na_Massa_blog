@@ -10,13 +10,10 @@ namespace Mao_Na_Massa_blog
         const string CONNECTION_STRING
             = @"Server=TERMINAL01\SQLEXPRESS;Database=Blog;User ID=admin;Password=12345;Trusted_Connection=false;TrustServerCertificate=true";
 
-
-
-
         static void Main(string[] args)
         {
             User usuario = new("carol", "nevescarol@gmail.com", "1234", "carol-dev", "https://...", "carol Neves");
-            Role autor = new(name: "Autor", slug: "Autor");
+            Role autor = new(name: "Aluno", slug: "Aluno");
 
             var connection = new SqlConnection(CONNECTION_STRING);
 
@@ -26,14 +23,16 @@ namespace Mao_Na_Massa_blog
             //ListarUsuarios(connection);
             //ListarUsuario(connection, 4);
             // CriarUsuario(usuario, connection);
-            AtualizarUsuario(connection, usuario, 1);
+            // AtualizarUsuario(connection, usuario, 1);
             //ApagarUsuario(connection, 1);
 
             //ListarAutores(connection);
             //ListarAutor(connection, 2);
-            //CriarAutor(connection, autor);
-            AtualizarAutor(connection, autor, 2);
+            // CriarAutor(connection, autor);
+            // AtualizarAutor(connection, autor, 2);
             //ApagarAutor(connection, 1);
+
+            BuscarFerfisUsuarios(connection);
 
             connection.Close();
         }
@@ -237,6 +236,39 @@ namespace Mao_Na_Massa_blog
             catch (Exception ex)
             {
                 Console.WriteLine($"Ocorreu um erro interno no servidor ao excluir o autor, Mensagem: {ex.Message}");
+            }
+        }
+
+
+        // USER ROLE
+        public static void BuscarFerfisUsuarios(SqlConnection connection)
+        {
+            try
+            {
+                UseRoleRepository repositorio = new(connection);
+                IEnumerable<User> userRoles = repositorio.Buscar();
+
+                if (userRoles.Count() == 0)
+                {
+                    // Console.WriteLine("Usuario nao tem perfil");
+                    return;
+                }
+                else
+                    foreach (var user in userRoles)
+                    {
+                        Console.WriteLine($"User Nome : {user.Name}, {user.Email}");
+                        foreach (var role in user.Roles ?? new List<Role>())
+                        {
+                            if (role.Id > 0)
+                            {
+                                Console.WriteLine($"      {role.Name ?? null}, {role.Slug ?? null}");
+                            }
+                        }
+                    }
+            }
+            catch (Exception ex)
+            {
+                 Console.WriteLine($"Ocorreu um erro interno no servidor ao buscar os perfis do usuario, Mensagem: {ex.Message}");
             }
         }
     }
