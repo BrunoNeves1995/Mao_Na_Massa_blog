@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using Mao_Na_Massa_blog.Models;
 using Mao_Na_Massa_blog.Repositories;
+using Mao_Na_Massa_blog.Screens.TagScreens;
 
 namespace Mao_Na_Massa_blog
 {
@@ -20,255 +21,37 @@ namespace Mao_Na_Massa_blog
 
             connection.Open();
 
-            //ListarUsuarios(connection);
-            //ListarUsuario(connection, 4);
-            // CriarUsuario(usuario, connection);
-            // AtualizarUsuario(connection, usuario, 1);
-            //ApagarUsuario(connection, 1);
+            CarregarTelas();
 
-            //ListarAutores(connection);
-            //ListarAutor(connection, 2);
-            // CriarAutor(connection, autor);
-            // AtualizarAutor(connection, autor, 2);
-            //ApagarAutor(connection, 1);
-
-            BuscarFerfisUsuarios(connection);
-
-            connection.Close();
+           
+            Console.ReadKey();
+             connection.Close();
         }
 
-        // USER
-        public static void ListarUsuarios(SqlConnection connection)
+        private static void CarregarTelas()
         {
-            try
+            Console.Clear();
+            Console.WriteLine("Meu ao Blog");
+            Console.WriteLine("-----------------");
+            Console.WriteLine("O que deseja fazer ?");
+            Console.WriteLine();
+            Console.WriteLine("1 - Gestão de usuário");
+            Console.WriteLine("2 - Gestão de perfil");
+            Console.WriteLine("3 - Gestão de categoria");
+            Console.WriteLine("4 - Gestão de tag");
+            Console.WriteLine("5 - Vincular perfil/usuário");
+            Console.WriteLine("6 - Vincular post/tag");
+            Console.WriteLine("7 - Relatórios");
+            Console.WriteLine();
+            Console.WriteLine();
+            var opcao = short.Parse(Console.ReadLine()!);
+
+            switch (opcao)
             {
-                UserRepository repositorio = new UserRepository(connection);
-                var usuarios = repositorio.Buscar();
-
-                if (usuarios == null)
-                {
-                    Console.WriteLine($"Não existe usuario cadastrado");
-                }
-                else
-                    foreach (var usuario in usuarios)
-                        Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}, E-mail: {usuario.Email}");
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine($"OCorreu um erro interno no servidor ao buscar os usuarios, Mensagem: {ex.Message}");
-            }
-        }
-
-        public static void ListarUsuario(SqlConnection connection, int id)
-        {
-            UserRepository repositorio = new UserRepository(connection);
-            var usuario = repositorio.Busca(id);
-
-            try
-            {
-                if (usuario.Id == 0 || usuario.Name == null)
-                {
-                    Console.WriteLine($"Usuario nao encontrado");
-                }
-                else
-                    Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}, E-mail: {usuario.Email}");
-            }
-            catch (System.Exception ex)
-            {
-
-                Console.WriteLine($"Erro interno no servidor, Mensagem: {ex.Message}");
-            }
-        }
-
-        public static void CriarUsuario(User usuario, SqlConnection connection)
-        {
-            try
-            {
-                UserRepository repositorio = new UserRepository(connection);
-                var resultado = repositorio.Inserir(usuario);
-                if (resultado)
-                {
-                    Console.WriteLine($"Usuario criado com sucesso");
-                }
-                else
-                    Console.WriteLine($"Erro ao criar Usuario");
-            }
-            catch (System.Exception ex)
-            {
-
-                Console.WriteLine($"Ocorreu um erro interno no servidor ao criar um novo usuario, Mensagem: {ex.Message}");
-            }
-        }
-
-        public static void AtualizarUsuario(SqlConnection connection, User usuario, int id)
-        {
-
-            try
-            {
-                UserRepository repositorio = new UserRepository(connection);
-                var result = repositorio.Atualizar(id, usuario);
-
-                if (result)
-                {
-                    Console.WriteLine($"Usuario {usuario.Name} foi atualizado com sucesso");
-                }
-                else
-                    Console.WriteLine($"Erro ao atualizar o usuario");
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine($"Ocorreu um erro interno no servidor ao atualizar o usuario, Mensagem: {ex.Message}");
-            }
-        }
-
-
-        public static void ApagarUsuario(SqlConnection connection, int id)
-        {
-            try
-            {
-                UserRepository repositorio = new UserRepository(connection);
-                var resultado = repositorio.Deletar(id);
-
-                if (resultado)
-                    Console.WriteLine($"Usuario com {id} foi deletado com sucesso");
-                else
-                    Console.WriteLine($"Erro ao excluir usuario");
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine($"Ocorreu um erro interno no servidor ao excluir o usuario, Mensagem: {ex.Message}");
-            }
-        }
-
-        // ROLE
-        public static void ListarAutores(SqlConnection connection)
-        {
-            try
-            {
-                RoleRepository repositorio = new(connection);
-                var autores = repositorio.Buscar();
-
-                if (autores.Count() == 0)
-                {
-                    Console.WriteLine($"Autor não cadastrado");
-                }
-                else
-                    foreach (var autor in autores)
-                        Console.WriteLine($"Id: {autor.Id}, Nome: {autor.Name}, Slug: {autor.Slug}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"OCorreu um erro interno no servidor ao buscar os autores, Mensagem: {ex.Message}");
-            }
-        }
-
-        public static void ListarAutor(SqlConnection connection, int id)
-        {
-            try
-            {
-                RoleRepository repositorio = new(connection);
-                Role autor = repositorio.Busca(id);
-
-                if (autor.Id == 0 || autor.Name == null)
-                    Console.WriteLine($"Autor nao encontrado");
-                else
-                    Console.WriteLine($"Id: {autor.Id}, Nome: {autor.Name}, Slug: {autor.Slug}");
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine($"OCorreu um erro interno no servidor ao busca o autor, Mensagem: {ex.Message}");
-            }
-        }
-
-        public static void CriarAutor(SqlConnection connection, Role autor)
-        {
-            try
-            {
-                RoleRepository repositorio = new(connection);
-                bool resultado = repositorio.Inserir(autor);
-
-                if (resultado)
-                    Console.WriteLine($"Autor criado com sucesso");
-                else
-                    Console.WriteLine($"Erro ao criar autor");
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine($"Ocorreu um erro interno no servidor ao criar um novo autor, Mensagem: {ex.Message}");
-            }
-        }
-
-        public static void AtualizarAutor(SqlConnection connection, Role autor, int id)
-        {
-            try
-            {
-                RoleRepository repositorio = new(connection);
-                bool resultado = repositorio.Atualizar(autor, id);
-
-                if (resultado)
-                    Console.WriteLine($"{autor.Name} foi atualizado com sucesso");
-                else
-                    Console.WriteLine($"Usuario não encontrado");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ocorreu um erro interno no servidor ao atualizar o autor, Mensagem: {ex.Message}");
-            }
-        }
-
-        public static void ApagarAutor(SqlConnection connection, int id)
-        {
-            try
-            {
-                RoleRepository repositorio = new(connection);
-                bool resutado = repositorio.Deletar(id);
-
-                if (resutado)
-                    Console.WriteLine($"Autor com {id} foi deletado com sucesso");
-                else
-                    Console.WriteLine($"Erro ao excluir o autor");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ocorreu um erro interno no servidor ao excluir o autor, Mensagem: {ex.Message}");
-            }
-        }
-
-
-        // USER ROLE
-        public static void BuscarFerfisUsuarios(SqlConnection connection)
-        {
-            try
-            {
-                UseRoleRepository repositorio = new(connection);
-                IEnumerable<User> userRoles = repositorio.Buscar();
-
-                if (userRoles.Count() == 0)
-                {
-                    // Console.WriteLine("Usuario nao tem perfil");
-                    return;
-                }
-                else
-                    foreach (var user in userRoles)
-                    {
-                        Console.WriteLine($"User Nome : {user.Name}, {user.Email}");
-                        foreach (var role in user.Roles ?? new List<Role>())
-                        {
-                            if (role.Id > 0)
-                            {
-                                Console.WriteLine($"      {role.Name ?? null}, {role.Slug ?? null}");
-                            }
-                        }
-                    }
-            }
-            catch (Exception ex)
-            {
-                 Console.WriteLine($"Ocorreu um erro interno no servidor ao buscar os perfis do usuario, Mensagem: {ex.Message}");
+                case 4:
+                    MenuTagScreens.CarregartelaPincipalTag();
+                    break;
+                default: CarregarTelas(); break;
             }
         }
     }
