@@ -16,22 +16,22 @@ namespace Mao_Na_Massa_blog
             User usuario = new("carol", "nevescarol@gmail.com", "1234", "carol-dev", "https://...", "carol Neves");
             Role autor = new(name: "Aluno", slug: "Aluno");
 
-            var connection = new SqlConnection(CONNECTION_STRING);
+            Database.Conexao = new SqlConnection(CONNECTION_STRING);
 
 
-            connection.Open();
+            Database.Conexao.Open();
 
             CarregarTelas();
 
            
             Console.ReadKey();
-             connection.Close();
+             Database.Conexao.Close();
         }
 
         private static void CarregarTelas()
         {
             Console.Clear();
-            Console.WriteLine("Meu ao Blog");
+            Console.WriteLine("Meu  Blog");
             Console.WriteLine("-----------------");
             Console.WriteLine("O que deseja fazer ?");
             Console.WriteLine();
