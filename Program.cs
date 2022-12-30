@@ -14,7 +14,7 @@ namespace Mao_Na_Massa_blog
         static void Main(string[] args)
         {
             User usuario = new("carol", "nevescarol@gmail.com", "1234", "carol-dev", "https://...", "carol Neves");
-            Role autor = new(name: "Aluno", slug: "Aluno");
+            Role pefil = new(name: "Aluno", slug: "Aluno");
 
             Database.Conexao = new SqlConnection(CONNECTION_STRING);
 

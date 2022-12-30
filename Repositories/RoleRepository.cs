@@ -20,7 +20,7 @@ namespace Mao_Na_Massa_blog.Repositories
 
         public IEnumerable<Role> Buscar()
         {
-            List<Role> autores = new();
+            List<Role> perfis = new();
             try
             {
                 SqlCommand command = new();
@@ -39,11 +39,11 @@ namespace Mao_Na_Massa_blog.Repositories
 
                 while (reader.Read())
                 {
-                    Role autor = new();
-                    autor.Id = Convert.ToInt32(reader["Id"]);
-                    autor.Name = Convert.ToString(reader["Name"]);
-                    autor.Slug = Convert.ToString(reader["Slug"]);
-                    autores.Add(autor);
+                    Role perfil = new();
+                    perfil.Id = Convert.ToInt32(reader["Id"]);
+                    perfil.Name = Convert.ToString(reader["Name"]);
+                    perfil.Slug = Convert.ToString(reader["Slug"]);
+                    perfis.Add(perfil);
                 }
                 reader.Close();
             }
@@ -51,12 +51,12 @@ namespace Mao_Na_Massa_blog.Repositories
             {
                 Console.WriteLine($"E505 - Erro interno no servidor, Mensagem: {ex.Message}");
             }
-            return autores;
+            return perfis;
         }
 
         public Role Busca(int id)
         {
-            Role autor = new();
+            Role perfil = new();
             try
             {
                 var command = new SqlCommand();
@@ -76,9 +76,9 @@ namespace Mao_Na_Massa_blog.Repositories
 
                 while (reader.Read())
                 {
-                    autor.Id = Convert.ToInt32(reader["Id"]);
-                    autor.Name = Convert.ToString(reader["Name"]);
-                    autor.Slug = Convert.ToString(reader["Slug"]);
+                    perfil.Id = Convert.ToInt32(reader["Id"]);
+                    perfil.Name = Convert.ToString(reader["Name"]);
+                    perfil.Slug = Convert.ToString(reader["Slug"]);
                 }
                 reader.Close();
             }
@@ -86,11 +86,11 @@ namespace Mao_Na_Massa_blog.Repositories
             {
                 Console.WriteLine($"E506 - Erro interno no servidor, Mensagem: {ex.Message}");
             }
-            return autor;
+            return perfil;
         }
 
 
-        public bool Inserir(Role autor)
+        public bool Inserir(Role perfil)
         {
             try
             {
@@ -106,8 +106,8 @@ namespace Mao_Na_Massa_blog.Repositories
                 command.CommandText = sql;
                 command.Connection = _connection;
 
-                command.Parameters.AddWithValue("@Name", autor.Name);
-                command.Parameters.AddWithValue("@Slug", autor.Slug);
+                command.Parameters.AddWithValue("@Name", perfil.Name);
+                command.Parameters.AddWithValue("@Slug", perfil.Slug);
                 command.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -119,13 +119,13 @@ namespace Mao_Na_Massa_blog.Repositories
         }
 
 
-        public bool Atualizar(Role autor, int id)
+        public bool Atualizar(Role perfil, int id)
         {
             try
             {   
-                Role antigoAutor = new Role();
+                Role antigoPerfil = new Role();
                 SqlCommand command = new();
-                // recuperando o autor
+                // recuperando o Perfil
                 var sql = @"
                          SELECT 
                              [Id]
@@ -142,15 +142,15 @@ namespace Mao_Na_Massa_blog.Repositories
                 while (reader.Read())
                 {
                    
-                    antigoAutor.Id = Convert.ToInt32(reader["Id"]);
-                    antigoAutor.Name = Convert.ToString(reader["Name"]);
-                    antigoAutor.Slug = Convert.ToString(reader["Slug"]);
-                    Console.WriteLine($"Id: {antigoAutor.Id}, Nome: {antigoAutor.Name}");
+                    antigoPerfil.Id = Convert.ToInt32(reader["Id"]);
+                    antigoPerfil.Name = Convert.ToString(reader["Name"]);
+                    antigoPerfil.Slug = Convert.ToString(reader["Slug"]);
+                    Console.WriteLine($"Id: {antigoPerfil.Id}, Nome: {antigoPerfil.Name}");
                 }
                 reader.Close();
 
-                // atualizando o dados do autor
-                if (antigoAutor.Id == 0 || antigoAutor.Name == null)
+                // atualizando o dados do Perfil
+                if (antigoPerfil.Id == 0 || antigoPerfil.Name == null)
                 {
                     return false;
                 }
@@ -162,7 +162,7 @@ namespace Mao_Na_Massa_blog.Repositories
 	                WHERE Id = @IdAutor";
 
                     command.Parameters.AddWithValue("@IdAutor", id);
-                    command.Parameters.AddWithValue("@Name", autor.Name);
+                    command.Parameters.AddWithValue("@Name", perfil.Name);
 
                     command.CommandText = insertSql;
                     command.Connection = _connection;
@@ -182,12 +182,12 @@ namespace Mao_Na_Massa_blog.Repositories
         {
             try
             {
-                Role autor = new();
+                Role perfil = new();
 
 
                 SqlCommand command = new();
 
-                // recuperando o cargo
+                // recuperando o Perfil
                 var sql = @"
                 SELECT 
                     [Id]
@@ -203,21 +203,21 @@ namespace Mao_Na_Massa_blog.Repositories
 
                 while (reader.Read())
                 {
-                    autor.Id = Convert.ToInt32(reader["Id"]);
-                    autor.Name = Convert.ToString(reader["Name"]);
-                    autor.Slug = Convert.ToString(reader["Slug"]);
+                    perfil.Id = Convert.ToInt32(reader["Id"]);
+                    perfil.Name = Convert.ToString(reader["Name"]);
+                    perfil.Slug = Convert.ToString(reader["Slug"]);
 
-                    Console.WriteLine($"Id: {autor.Id}, Nome: {autor.Name}");
+                    Console.WriteLine($"Id: {perfil.Id}, Nome: {perfil.Name}");
                 }
                 reader.Close();
 
-                if (autor.Id == 0 || autor.Name == null)
+                if (perfil.Id == 0 || perfil.Name == null)
                 {
                     return false;
                 }
                 else
                 {
-                    // deletando cargo
+                    // deletando Perfil
                     var deleteSql =
                     @"DELETE FROM [Blog].[dbo].[Role]
 	                        WHERE [Id] = @IdUsuario";

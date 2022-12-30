@@ -73,7 +73,6 @@ namespace Mao_Na_Massa_blog.Repositories
 
                 if (resultado == 0)
                     return false;
-
             }
             catch (Exception ex)
             {
@@ -138,17 +137,14 @@ namespace Mao_Na_Massa_blog.Repositories
                 Console.WriteLine($"E513 - Erro interno no servidor, Mensagem: {ex.Message}");
                 return false;
             }
-
             return true;
         }
 
         public bool Deletar(int id)
         {
+            Tag tag = new();
             try
             {
-                Tag tag = new();
-
-
                 SqlCommand command = new();
 
                 // recuperando o cargo
@@ -170,21 +166,18 @@ namespace Mao_Na_Massa_blog.Repositories
                     tag.Id = Convert.ToInt32(reader["Id"]);
                     tag.Name = Convert.ToString(reader["Name"]);
                     tag.Slug = Convert.ToString(reader["Slug"]);
-
                     Console.WriteLine($"Id: {tag.Id}, Nome: {tag.Name}");
                 }
                 reader.Close();
 
                 if (tag.Id == 0 || tag.Name == null)
-                {
                     return false;
-                }
-
 
                 // deletando tag
                 var deleteSql =
                 @"DELETE FROM [Blog].[dbo].[Tag]
-	                        WHERE [Id] = @IdTag";
+	                        WHERE 
+                                [Id] = @IdTag";
 
                 command.Parameters.AddWithValue("@IdTag", id);
                 command.Connection = _connection;

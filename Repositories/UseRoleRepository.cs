@@ -36,7 +36,7 @@ namespace Mao_Na_Massa_blog.Repositories
                     LEFT JOIN [Blog].[dbo].[UserRole] AS UR ON U.Id = UR.[UserId]
                     LEFT JOIN [Blog].[dbo].[Role] AS R ON UR.[RoleId] = R.[Id]
                 ";
-
+        
                 SqlCommand command = new();
                 command.CommandText = consultaSql;
                 command.Connection = _connection;
@@ -67,7 +67,6 @@ namespace Mao_Na_Massa_blog.Repositories
                             role.Slug = Convert.ToString(reader["RoleSlug"]);
                             usr.Roles.Add(role);
                             userRoles.Add(usr);
-                           
                         }
                         else
                         {
@@ -76,8 +75,7 @@ namespace Mao_Na_Massa_blog.Repositories
                             role.Slug = null;
                             usr.Roles.Add(role);
                             userRoles.Add(usr);
-                        }
-                       
+                        }     
                     }
                     
                     //  usuario ja existir na lista, então adiciona apenas os roles
@@ -96,7 +94,6 @@ namespace Mao_Na_Massa_blog.Repositories
                         role.Slug = null;
                        usr.Roles.Add(role);
                     }
-                   
                 }
                 reader.Close();
             }

@@ -205,16 +205,17 @@ namespace Mao_Na_Massa_blog.Repositories
 
                 // recuperando o usuario
                 var selectSql =
-                @"SELECT 
-		                        [Id]
-		                        ,[Name]
-		                        ,[Email]
-		                        ,[PasswordHash]
-		                        ,[Bio]
-		                        ,[Image]
-		                        ,[Slug]
-		                    FROM [Blog].[dbo].[User]
-		                    WHERE [Id] = @Id";
+                @"
+                SELECT 
+		            [Id],
+		            [Name],
+		            [Email],
+		            [PasswordHash],
+		            [Bio],
+		            [Image],
+		            [Slug]
+		        FROM [Blog].[dbo].[User]
+		        WHERE [Id] = @Id";
 
                 command.Parameters.AddWithValue("@Id", id);
                 command.Connection = _connection;
@@ -223,7 +224,6 @@ namespace Mao_Na_Massa_blog.Repositories
 
                 while (reader.Read())
                 {
-
                     usuario.Id = reader.GetInt32(0);
                     usuario.Name = reader.GetString(1);
                     usuario.Email = reader.GetString(2);
@@ -231,15 +231,13 @@ namespace Mao_Na_Massa_blog.Repositories
                     usuario.Bio = reader.GetString(4);
                     usuario.Image = reader.GetString(5);
                     usuario.Slug = reader.GetString(6);
-
                     Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}");
                 }
                 reader.Close();
 
                 if (usuario.Id == 0 || usuario.Name == null)
-                {
                     return false;
-                }
+
                 else
                 {
                     // deletando usuario
@@ -260,8 +258,6 @@ namespace Mao_Na_Massa_blog.Repositories
             }
             return true;
         }
-
-
     }
 
 }
