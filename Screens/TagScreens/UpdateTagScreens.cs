@@ -53,13 +53,13 @@ namespace Mao_Na_Massa_blog.Screens.TagScreens
                 bool resutado = repositorio.Atualizar(tag);
 
                 if(resutado == false)
-                    Console.WriteLine("Erro ao atualizar a tag");
+                    Console.WriteLine("tag nao encontrada");
                 else
                     Console.WriteLine("Tag atualizada com sucesso");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro no servidor ao atualizar a tag, Mensagem: {ex.Message}");
+                Console.WriteLine($"Ocorreu um erro ao atualizar a tag, Mensagem: {ex.Message}");
             }
         }
         

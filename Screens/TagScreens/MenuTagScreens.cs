@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
+
+using Mao_Na_Massa_blog.Screens.Menu;
 
 namespace Mao_Na_Massa_blog.Screens.TagScreens
 {
@@ -19,7 +16,7 @@ namespace Mao_Na_Massa_blog.Screens.TagScreens
             Console.WriteLine("2 - Cadastrar tags");
             Console.WriteLine("3 - Atualizar tag");
             Console.WriteLine("4 - Excluir tag");
-            Console.WriteLine();
+            Console.WriteLine("5 - Voltar ao inicio");
             Console.WriteLine();
             var opcao = short.Parse(Console.ReadLine()!);
 
@@ -38,6 +35,9 @@ namespace Mao_Na_Massa_blog.Screens.TagScreens
                     break;
                 case 4:
                     DeleteTagScreens.Carregartela();
+                    break;
+                case 5:
+                    TelaPrincipal.CarregarTelas();
                     break;
                 default: CarregartelaPincipalTag(); break;
 

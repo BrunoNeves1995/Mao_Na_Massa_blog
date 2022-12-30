@@ -81,6 +81,8 @@ namespace Mao_Na_Massa_blog.Repositories
                     perfil.Slug = Convert.ToString(reader["Slug"]);
                 }
                 reader.Close();
+                if(perfil == null)
+                    return new Role();
             }
             catch (Exception ex)
             {
@@ -119,7 +121,7 @@ namespace Mao_Na_Massa_blog.Repositories
         }
 
 
-        public bool Atualizar(Role perfil, int id)
+        public bool Atualizar(Role perfil)
         {
             try
             {   
@@ -136,8 +138,9 @@ namespace Mao_Na_Massa_blog.Repositories
 
                 command.CommandText = sql;
                 command.Connection = _connection;
-                command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@Id", perfil.Id);
                 SqlDataReader reader = command.ExecuteReader();
+                
 
                 while (reader.Read())
                 {
@@ -145,30 +148,38 @@ namespace Mao_Na_Massa_blog.Repositories
                     antigoPerfil.Id = Convert.ToInt32(reader["Id"]);
                     antigoPerfil.Name = Convert.ToString(reader["Name"]);
                     antigoPerfil.Slug = Convert.ToString(reader["Slug"]);
-                    Console.WriteLine($"Id: {antigoPerfil.Id}, Nome: {antigoPerfil.Name}");
                 }
                 reader.Close();
 
                 // atualizando o dados do Perfil
-                if (antigoPerfil.Id == 0 || antigoPerfil.Name == null)
-                {
+                if (antigoPerfil.Id == 0 || string.IsNullOrEmpty(perfil.Name) && string.IsNullOrEmpty(perfil.Slug))
                     return false;
-                }
                 else
                 {
                     var insertSql = @"
 	                UPDATE [Blog].[dbo].[Role] 
-	                    SET Name = @Name
-	                WHERE Id = @IdAutor";
+	                    SET 
+                        Name = @Name,
+                        Slug = @Slug
+	                    WHERE Id = @IdAutor";
 
-                    command.Parameters.AddWithValue("@IdAutor", id);
-                    command.Parameters.AddWithValue("@Name", perfil.Name);
+                    command.Parameters.AddWithValue("@IdAutor", perfil.Id);
+                    
+                    // se nao for null ou vazio ou igual ao valor antigo
+                    if( !string.IsNullOrEmpty(perfil.Name) && perfil.Name != antigoPerfil.Name)
+                        command.Parameters.AddWithValue("@Name", perfil.Name);
+                    else
+                        command.Parameters.AddWithValue("@Name", antigoPerfil.Name);
 
+                   if(!string.IsNullOrEmpty(perfil.Slug) && perfil.Slug != antigoPerfil.Slug)
+                        command.Parameters.AddWithValue("@Slug", perfil.Slug);
+                    else
+                        command.Parameters.AddWithValue("@Slug", antigoPerfil.Slug);    
+                    
                     command.CommandText = insertSql;
                     command.Connection = _connection;
                     command.ExecuteNonQuery();
                 }
-
             }
             catch (Exception ex)
             {
