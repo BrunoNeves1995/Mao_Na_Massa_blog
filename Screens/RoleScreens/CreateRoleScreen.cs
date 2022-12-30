@@ -1,18 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Mao_Na_Massa_blog.Models;
 using Mao_Na_Massa_blog.Repositories;
+using Mao_Na_Massa_blog.Screens.TagScreens;
 
-namespace Mao_Na_Massa_blog.Screens.TagScreens
+namespace Mao_Na_Massa_blog.Screens.RoleScreens
 {
-    public static class CreateTegScreens
+    public static class CreateRoleScreen
     {
         public static void Carregartela()
         {
             Console.Clear();
-            Console.WriteLine("Nova tag");
+            Console.WriteLine("Novo Perfil");
             Console.WriteLine("-------------");
 
             Console.Write("Nome: ");
@@ -21,7 +18,7 @@ namespace Mao_Na_Massa_blog.Screens.TagScreens
             Console.Write("Slug: ");
             var slug = Console.ReadLine();
 
-            CriarTag(new Tag
+            CadastarPerfil(new Role
             {   
                
                 Name = name,
@@ -30,7 +27,7 @@ namespace Mao_Na_Massa_blog.Screens.TagScreens
             Console.WriteLine("Deseja Voltar ou Menu? (1 = sim, 2= nao)");
             var opcao = short.Parse(Console.ReadLine()!);
             if (opcao == 1)
-                MenuTagScreens.CarregartelaPincipalTag();
+                MenuRoleScreens.CarregartelaPincipalRole();
             else
             {
                 Console.WriteLine("Aperte enter 2x para fechar");
@@ -40,25 +37,24 @@ namespace Mao_Na_Massa_blog.Screens.TagScreens
             }
         }
 
-        public static void CriarTag(Tag tag)
+        public static void CadastarPerfil(Role perfil)
         {
             try
             {
-                TagRepository repositorio = new(Database.Conexao);
-
-                bool resultado = repositorio.Inserir(tag);
+                RoleRepository repositorio = new(Database.Conexao);
+                bool resultado = repositorio.Inserir(perfil);
 
                 if (resultado == false)
-                     Console.WriteLine("Erro ao criar a tag");
-                else
-                    Console.WriteLine("Tag criada com sucesso");
-
+                    return;
+                
+                Console.WriteLine("Perfil Criado com Sucesso!");
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine($"Ocorreu um erro no servidor ao criar uma nova tags, Mensagem: {ex.Message}");
+                Console.WriteLine($"Ocorreu um erro ao criar um novo perfil, Mensagem: {ex.Message}");
             }
+
+
         }
     }
 }

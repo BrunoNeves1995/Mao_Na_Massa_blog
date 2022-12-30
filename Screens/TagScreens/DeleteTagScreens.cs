@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Mao_Na_Massa_blog.Models;
+
 using Mao_Na_Massa_blog.Repositories;
 
 namespace Mao_Na_Massa_blog.Screens.TagScreens

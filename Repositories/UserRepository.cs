@@ -80,8 +80,11 @@ namespace Mao_Na_Massa_blog.Repositories
                 command.CommandText = sql;
                 SqlDataReader reader = command.ExecuteReader();
 
+                
+
                 while (reader.Read())
-                {
+                {   
+
                     user.Id = Convert.ToInt32(reader["Id"]);
                     user.Name = Convert.ToString(reader["Name"]);
                     user.Email = Convert.ToString(reader["Email"]);
@@ -91,6 +94,9 @@ namespace Mao_Na_Massa_blog.Repositories
                     user.Slug = Convert.ToString(reader["Slug"]);
                 }
                 reader.Close();
+
+                if(user == null)
+                    return new User();
             }
             catch (Exception ex)
             {
