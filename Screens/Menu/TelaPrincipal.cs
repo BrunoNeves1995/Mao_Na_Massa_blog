@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mao_Na_Massa_blog.Screens.CategoryScreens;
+using Mao_Na_Massa_blog.Screens.RoleScreens;
 using Mao_Na_Massa_blog.Screens.TagScreens;
 using Mao_Na_Massa_blog.Screens.UserScreens;
 
@@ -34,6 +36,9 @@ namespace Mao_Na_Massa_blog.Screens.Menu
                     break;
                 case 2:
                     MenuRoleScreens.CarregartelaPincipalRole();
+                    break;
+                case 3:
+                    MenuCategoryScreens.CarregartelaPincipalCategory();
                     break;
                 case 4:
                     MenuTagScreens.CarregartelaPincipalTag();

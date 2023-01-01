@@ -176,7 +176,7 @@ namespace Mao_Na_Massa_blog.Repositories
             return userRole;
         }
 
-        public User AdicionarPerfilAoUsuario(short idUser, short idRole)
+        public bool AdicionarPerfilAoUsuario(short idUser, short idRole)
         {
             User usuario = new();
             Role perfil = new();
@@ -188,34 +188,30 @@ namespace Mao_Na_Massa_blog.Repositories
                 RoleRepository roleRepository = new(_connection);
                 perfil = roleRepository.Busca(idRole);
 
-                if(usuario == null || perfil == null)
-                    return new User();
-
-                var insertUserrole = @"
+                if(usuario is null || perfil is null)
+                    return false;
+                
+                var insertUserRole = @"
                     INSERT INTO [Blog].[dbo].[UserRole] 
                         VALUES
                         (
-                            @UserId, @RoleId
+                            @UserId, 
+                            @RoleId
                         )
                 ";
                 
                 SqlCommand command = new();
-                command.CommandText = insertUserrole;
+                command.CommandText = insertUserRole;
                 command.Connection = _connection;
                 command.Parameters.AddWithValue("@UserId", usuario.Id);
                 command.Parameters.AddWithValue("@RoleId", perfil.Id);
                 command.ExecuteNonQuery();
-
-                // retornando o usuario que foi vinculado ao perfil
-                usuario =  Busca(idUser);
-
-                
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"E510 - Erro interno no servidor, Mensagem: {ex.Message}");
             }
-            return usuario;
+            return true;
         }
 
     }
