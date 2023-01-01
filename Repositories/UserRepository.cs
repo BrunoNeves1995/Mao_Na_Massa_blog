@@ -57,7 +57,7 @@ namespace Mao_Na_Massa_blog.Repositories
         }
 
 
-        public User Busca(int id)
+        public User Busca(short id)
         {
             var user = new User();
             try
@@ -80,10 +80,10 @@ namespace Mao_Na_Massa_blog.Repositories
                 command.CommandText = sql;
                 SqlDataReader reader = command.ExecuteReader();
 
-                
+
 
                 while (reader.Read())
-                {   
+                {
 
                     user.Id = Convert.ToInt32(reader["Id"]);
                     user.Name = Convert.ToString(reader["Name"]);
@@ -95,7 +95,7 @@ namespace Mao_Na_Massa_blog.Repositories
                 }
                 reader.Close();
 
-                if(user == null)
+                if (user == null)
                     return new User();
             }
             catch (Exception ex)
@@ -142,8 +142,9 @@ namespace Mao_Na_Massa_blog.Repositories
             return true;
         }
 
-        public bool Atualizar(int id, User usuario)
-        {
+        public bool Atualizar(User usuario)
+        {   
+             var antigoUsuario = new User();
             try
             {
                 var command = new SqlCommand();
@@ -160,14 +161,14 @@ namespace Mao_Na_Massa_blog.Repositories
 	                    FROM [Blog].[dbo].[User]
 	                    WHERE [Id] = @Id";
 
-                command.Parameters.AddWithValue("@Id", id);
-                command.Connection = _connection;
                 command.CommandText = selectSql;
+                command.Connection = _connection;
+                command.Parameters.AddWithValue("@Id", usuario.Id);
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    var antigoUsuario = new User();
+                   
                     antigoUsuario.Id = reader.GetInt32(0);
                     antigoUsuario.Name = reader.GetString(1);
                     antigoUsuario.Email = reader.GetString(2);
@@ -184,14 +185,42 @@ namespace Mao_Na_Massa_blog.Repositories
                 var insertSql =
                 @"
 	                     UPDATE [Blog].[dbo].[User] 
-	                        SET Name = @Name
+	                        SET 
+                                Name = @Name,
+                                Email = @Email,
+	                            Bio = @Bio,
+	                            Image = @Image,
+	                            Slug = @Slug
 	                    WHERE Id = @Id";
 
-                // command.Parameters.AddWithValue("@Id", user.Id);
-                command.Parameters.AddWithValue("@Name", usuario.Name);
+                // se nao for null ou vazio ou igual ao valor antigo
+                if (!string.IsNullOrEmpty(usuario.Name) && usuario.Name != antigoUsuario.Name)
+                    command.Parameters.AddWithValue("@Name", usuario.Name);
+                else
+                    command.Parameters.AddWithValue("@Name", antigoUsuario.Name);
 
-                command.Connection = _connection;
+                if (!string.IsNullOrEmpty(usuario.Email) && usuario.Email != antigoUsuario.Email)
+                    command.Parameters.AddWithValue("@Email", usuario.Email);
+                else
+                    command.Parameters.AddWithValue("@Email", antigoUsuario.Email);
+                
+                if (!string.IsNullOrEmpty(usuario.Bio) && usuario.Bio != antigoUsuario.Bio)
+                    command.Parameters.AddWithValue("@Bio", usuario.Bio);
+                else
+                    command.Parameters.AddWithValue("@Bio", antigoUsuario.Bio);
+                
+                if (!string.IsNullOrEmpty(usuario.Image) && usuario.Image != antigoUsuario.Image)
+                    command.Parameters.AddWithValue("@Image", usuario.Image);
+                else
+                    command.Parameters.AddWithValue("@Image", antigoUsuario.Image);
+                
+                if (!string.IsNullOrEmpty(usuario.Slug) && usuario.Slug != antigoUsuario.Slug)
+                    command.Parameters.AddWithValue("@Slug", usuario.Slug);
+                else
+                    command.Parameters.AddWithValue("@Slug", antigoUsuario.Slug);
+
                 command.CommandText = insertSql;
+                command.Connection = _connection;
                 command.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -237,7 +266,7 @@ namespace Mao_Na_Massa_blog.Repositories
                     usuario.Bio = reader.GetString(4);
                     usuario.Image = reader.GetString(5);
                     usuario.Slug = reader.GetString(6);
-                    Console.WriteLine($"Id: {usuario.Id}, Nome: {usuario.Name}");
+                    Console.WriteLine($"Atualizado - Id: {usuario.Id}, Nome: {usuario.Name}");
                 }
                 reader.Close();
 

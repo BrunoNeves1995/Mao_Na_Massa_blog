@@ -1,4 +1,5 @@
 ﻿using Mao_Na_Massa_blog.Models;
+using Mao_Na_Massa_blog.Repositories.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Mao_Na_Massa_blog.Repositories
 {
-    public class RoleRepository
+    public class RoleRepository : IRepository<Role>
     {
         private readonly SqlConnection _connection;
 
@@ -54,7 +55,7 @@ namespace Mao_Na_Massa_blog.Repositories
             return perfis;
         }
 
-        public Role Busca(int id)
+        public Role Busca(short id)
         {
             Role perfil = new();
             try
@@ -189,7 +190,7 @@ namespace Mao_Na_Massa_blog.Repositories
             return true;
         }
 
-        public bool Deletar(int id)
+        public bool Deletar(short id)
         {
             try
             {

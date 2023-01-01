@@ -30,7 +30,7 @@ namespace Mao_Na_Massa_blog.Screens.RoleScreens
             }
         }
 
-        public static void ExcluirPerfil(int id)
+        public static void ExcluirPerfil(short id)
         {
             try
             {

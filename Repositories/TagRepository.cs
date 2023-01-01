@@ -1,13 +1,15 @@
+using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Mao_Na_Massa_blog.Models;
+using Mao_Na_Massa_blog.Repositories.Interface;
 
 namespace Mao_Na_Massa_blog.Repositories
 {
-    public class TagRepository
+    public class TagRepository : IRepository<Tag>
     {
         private readonly SqlConnection _connection;
 
@@ -18,7 +20,7 @@ namespace Mao_Na_Massa_blog.Repositories
 
         public IEnumerable<Tag> Buscar()
         {
-            List<Tag> tags = new();
+           List<Tag> tags = new();
 
             try
             {
@@ -54,6 +56,49 @@ namespace Mao_Na_Massa_blog.Repositories
 
             return tags;
         }
+       
+
+        public Tag Busca(short id)
+        {
+            Tag tag = new();
+
+            try
+            {
+                SqlCommand command = new();
+
+                var consultaSql = @"
+                    SELECT 
+                        [Id],
+                        [Name],
+                        [Slug]
+                    FROM [Blog].[dbo].[Tag]
+                    WHERE [Id] = @id
+                ";
+
+                command.CommandText = consultaSql;
+                command.Connection = _connection;
+                command.Parameters.AddWithValue("@Id", id);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    tag.Id = Convert.ToInt32(reader["Id"]);
+                    tag.Name = Convert.ToString(reader["Name"]);
+                    tag.Slug = Convert.ToString(reader["Slug"]);
+                }
+                reader.Close();
+
+                if(tag == null)
+                    return new Tag();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"E511 - Erro interno no servidor, Mensagem: {ex.Message}");
+            }
+
+            return tag;
+        }
+
 
         public bool Inserir(Tag tag)
         {
@@ -140,7 +185,7 @@ namespace Mao_Na_Massa_blog.Repositories
             return true;
         }
 
-        public bool Deletar(int id)
+        public bool Deletar(short id)
         {
             Tag tag = new();
             try
@@ -187,7 +232,7 @@ namespace Mao_Na_Massa_blog.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"E509 - Erro interno no servidor, Mensagem: {ex.Message}");
+                Console.WriteLine($"E514 - Erro interno no servidor, Mensagem: {ex.Message}");
                 return false;
             }
             return true;

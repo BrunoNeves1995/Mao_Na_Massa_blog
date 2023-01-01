@@ -24,7 +24,6 @@ namespace Mao_Na_Massa_blog
 
             TelaPrincipal.CarregarTelas();
 
-           
             Console.ReadKey();
              Database.Conexao.Close();
         }

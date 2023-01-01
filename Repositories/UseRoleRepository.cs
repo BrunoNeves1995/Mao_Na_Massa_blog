@@ -104,7 +104,7 @@ namespace Mao_Na_Massa_blog.Repositories
             return userRoles;
         }
 
-        public User Busca(int id)
+        public User Busca(short id)
         {
             User userRole = new();
             try
@@ -176,7 +176,7 @@ namespace Mao_Na_Massa_blog.Repositories
             return userRole;
         }
 
-        public User AdicionarPerfilAoUsuario(int idUser, int idRole)
+        public User AdicionarPerfilAoUsuario(short idUser, short idRole)
         {
             User usuario = new();
             Role perfil = new();
