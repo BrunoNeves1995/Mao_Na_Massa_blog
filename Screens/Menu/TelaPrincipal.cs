@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mao_Na_Massa_blog.Screens.TagScreens;
+using Mao_Na_Massa_blog.Screens.UserScreens;
 
 namespace Mao_Na_Massa_blog.Screens.Menu
 {
@@ -28,6 +29,9 @@ namespace Mao_Na_Massa_blog.Screens.Menu
 
             switch (opcao)
             {   
+                case 1:
+                    MenuUserScreen.CarregartelaPincipalUser();
+                    break;
                 case 2:
                     MenuRoleScreens.CarregartelaPincipalRole();
                     break;

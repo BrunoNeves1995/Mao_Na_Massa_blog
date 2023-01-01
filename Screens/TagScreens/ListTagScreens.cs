@@ -29,7 +29,6 @@ namespace Mao_Na_Massa_blog.Screens.TagScreens
                if("Enter" == Convert.ToString( ConsoleKey.Enter))
                     Console.ReadKey();
             }           
-           
         }
 
         public static void ListarTags()
@@ -40,7 +39,7 @@ namespace Mao_Na_Massa_blog.Screens.TagScreens
                 var tags = repositorio.Buscar();
 
                 if (tags.Count() == 0)
-                    return;
+                    Console.WriteLine("Tags não cadastradas");
                 else
                     foreach (var tag in tags)
                         Console.WriteLine($"{tag.Id} - {tag.Name} - ({tag.Slug})");
@@ -49,7 +48,6 @@ namespace Mao_Na_Massa_blog.Screens.TagScreens
             {
                Console.WriteLine($"Ocorreu um erro ao buscar as tags no servidor, Mensagem: {ex.Message}");
             }
-
         }
     }
 }

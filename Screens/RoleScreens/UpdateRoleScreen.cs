@@ -4,7 +4,7 @@ using Mao_Na_Massa_blog.Screens.TagScreens;
 
 namespace Mao_Na_Massa_blog.Screens.RoleScreens
 {
-    public static class UpdateRoleScreen
+    public static class UpdateRoleScreen 
     {
         public static void Carregartela()
         {
@@ -55,8 +55,7 @@ namespace Mao_Na_Massa_blog.Screens.RoleScreens
             }
             catch (Exception ex)
             {
-                
-                Console.WriteLine($"Ocorreu um erro ao atualizar a tag, Mensagem: {ex.Message}");
+                Console.WriteLine($"Ocorreu um erro ao atualizar perfil, Mensagem: {ex.Message}");
             }
         }
     }
