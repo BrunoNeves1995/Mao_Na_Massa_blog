@@ -1,21 +1,21 @@
 using Mao_Na_Massa_blog.Screens.Menu;
 using Mao_Na_Massa_blog.Screens.RoleScreens;
 
-namespace Mao_Na_Massa_blog.Screens.RoleScreens
+namespace Mao_Na_Massa_blog.Screens.CategoryScreens
 {
-    public static class MenuRoleScreens
+    public static class MenuCategoryScreens
     {
-        public static void CarregartelaPincipalRole()
+        public static void CarregartelaPincipalCategory()
         {
             Console.Clear();
-            Console.WriteLine("Gestão de Perfil");
+            Console.WriteLine("Gestão de Categoria");
             Console.WriteLine("--------------");
             Console.WriteLine("O que deseja fazer?");
             Console.WriteLine();
-            Console.WriteLine("1 - Listar Perfis");
-            Console.WriteLine("2 - Cadastrar Perfil");
-            Console.WriteLine("3 - Atualizar Perfil");
-            Console.WriteLine("4 - Excluir Perfil");
+            Console.WriteLine("1 - Listar Categorias");
+            Console.WriteLine("2 - Cadastrar Categoria");
+            Console.WriteLine("3 - Atualizar Categoria");
+            Console.WriteLine("4 - Excluir Categoria");
             Console.WriteLine("5 - Voltar ao inicio");
             Console.WriteLine();
 
@@ -25,21 +25,21 @@ namespace Mao_Na_Massa_blog.Screens.RoleScreens
             {
                 
                 case 1:
-                    ListRoleScreen.Carregartela();
+                    ListCategoryScreen.Carregartela();
                     break;
                  case 2:
-                    CreateRoleScreen.Carregartela();
+                    CreateCategoryScreen.Carregartela();
                     break;
                 case 3:
-                    UpdateRoleScreen.Carregartela();
+                    UpdateCategoryScreen.Carregartela();
                     break;
                 case 4:
-                    DeleteRoleScreen.Carregartela();
+                    DeleteCategoryScreen.Carregartela();
                     break;
                  case 5:
                     TelaPrincipal.CarregarTelas();
                     break;
-                default: CarregartelaPincipalRole(); break;
+                default: CarregartelaPincipalCategory(); break;
             }
         }
     }
