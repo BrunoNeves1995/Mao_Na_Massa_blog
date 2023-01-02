@@ -143,8 +143,8 @@ namespace Mao_Na_Massa_blog.Repositories
         }
 
         public bool Atualizar(User usuario)
-        {   
-             var antigoUsuario = new User();
+        {
+            var antigoUsuario = new User();
             try
             {
                 var command = new SqlCommand();
@@ -168,7 +168,7 @@ namespace Mao_Na_Massa_blog.Repositories
 
                 while (reader.Read())
                 {
-                   
+
                     antigoUsuario.Id = reader.GetInt32(0);
                     antigoUsuario.Name = reader.GetString(1);
                     antigoUsuario.Email = reader.GetString(2);
@@ -218,6 +218,8 @@ namespace Mao_Na_Massa_blog.Repositories
                     command.Parameters.AddWithValue("@Slug", usuario.Slug);
                 else
                     command.Parameters.AddWithValue("@Slug", antigoUsuario.Slug);
+
+
 
                 command.CommandText = insertSql;
                 command.Connection = _connection;

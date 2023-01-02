@@ -42,7 +42,7 @@ namespace Mao_Na_Massa_blog.Screens.UserScreens
                     Console.WriteLine("Usuario nao cadastrados");
                 else
                     foreach (var usuario in usuarios)
-                        Console.WriteLine($"{usuario.Id} - {usuario.Name} - {usuario.Email} - ({usuario.Slug})");
+                        Console.WriteLine(usuario.ToString());
             }
             catch (Exception ex)
             {
