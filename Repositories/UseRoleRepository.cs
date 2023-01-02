@@ -48,7 +48,7 @@ namespace Mao_Na_Massa_blog.Repositories
                     Role role = new();
 
                     user.Id = Convert.ToInt32(reader["Id"]);
-                    user.Name = Convert.ToString(reader["Name"]);
+                    user.Name = Convert.ToString(reader["Name" ?? string.Empty] );
                     user.Email = Convert.ToString(reader["Email"]);
                     user.Bio = Convert.ToString(reader["Bio"]);
                     user.Image = Convert.ToString(reader["Image"]);

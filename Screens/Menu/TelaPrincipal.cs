@@ -43,6 +43,9 @@ namespace Mao_Na_Massa_blog.Screens.Menu
                 case 4:
                     MenuTagScreens.CarregartelaPincipalTag();
                     break;
+                 case 5:
+                    MenuUserRoleScreens.CarregartelaPincipalUserRole();
+                    break;
                 default: CarregarTelas(); break;
             }
         }
